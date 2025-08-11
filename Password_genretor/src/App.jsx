@@ -1,4 +1,6 @@
 import { useState, useCallback, useEffect, useRef } from "react";
+import "./App.css";
+
 
 function App() {
   const [lenth, Setlenth] = useState(8);
@@ -24,7 +26,7 @@ function App() {
 
   const copyToClipboard = useCallback(() => {
     passwordRef.current?.select();
-    
+
     window.navigator.clipboard.writeText(password);
   },[password])
 
