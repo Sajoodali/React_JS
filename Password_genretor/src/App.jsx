@@ -1,35 +1,91 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useState, useCallback, useEffect } from "react";
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [lenth, Setlenth] = useState(8);
+  const [numberAllowed, SetnumberAllowed] = useState(false);
+  const [charAllowed, SetcharAllowed] = useState(false);
+  const [password, setpassword] = useState("");
+
+  const passwordGenerator = useCallback(() => {
+    let pass = "";
+    let str = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+
+    if (numberAllowed) str += "0123456789";
+    if (charAllowed) str += "!@#$%^&*()_+[]{}|;:,.<>?";
+
+    for (let i = 1; i <= lenth; i++) {
+      let randomNumber = Math.floor(Math.random() * str.length + 1);
+      pass += str.charAt(randomNumber);
+    }
+    setpassword(pass);
+    
+  }, [lenth, numberAllowed, charAllowed, setpassword]);
+
+
+  useEffect(() =>{
+    passwordGenerator();
+  },[lenth, numberAllowed, charAllowed,passwordGenerator]);
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
+    <div
+      className="w-full max-w-md mx-auto shadow-md
+        rounded-lg p-7 my-8 text-orange-500 bg-gray-800 "
+    >
+      <h1 className="text-white text-center text-3xl m-2">
+        Password Genretor{" "}
+      </h1>
+      <div className="flex shadow rounded-lg overflow-hidden mb-4">
+        <input
+          type="text"
+          placeholder="Password"
+          readOnly
+          value={password}
+          className="w-full outline-none py-1 px-3 bg-white font-semibold"
+        />
+        <button className="outline-none bg-amber-500 text-white px-3 py-1 shrink-0">
+          Copy
         </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
       </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+      <div className="flex text-sm gap-x-2">
+        <div className="flex items-center gap-x-1 ">
+          <input
+            type="range"
+            min={8}
+            max={100}
+            value={lenth}
+            className="cursor-pointer"
+            onChange={(e) => {
+              Setlenth(e.target.value);
+            }}
+          />
+          <label> Length:{lenth}</label>
+        </div>
+        <div className="flex items-center gap-x-1">
+          <input
+            type="checkbox"
+            defaultChecked={numberAllowed}
+            id="numberInput"
+            onChange={(e) => {
+              SetnumberAllowed((prev) => !prev);
+            }}
+          />
+          <label htmlFor="numberInput">Number</label>
+        </div>
+        <div className="flex items-center gap-x-1">
+          <input
+            type="checkbox"
+            defaultChecked={charAllowed}
+            id="charInput"
+            onChange={(e) => {
+              SetcharAllowed((prev) => !prev);
+            }}
+          />
+          <label htmlFor="charInput">Charector</label>
+        </div>
+        
+      </div>
+    </div>
+  );
 }
 
-export default App
+export default App;
